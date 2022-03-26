@@ -214,8 +214,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticleVo getById(ArticleInfoReq param) {
-        Article article = articleMapper.load(param.getId());
+        Article article = articleMapper.load(param);
         ArticleInfoVo vo = new ArticleInfoVo();
+        AssertUtils.assertTrue(article!=null,ResultCode.ARTICLE_NOT_EXIST);
         BeanUtil.copyProperties(article, vo);
 
         //获取作者的名称、头像

@@ -38,7 +38,7 @@ public interface ArticleMapper {
     * 查询 根据主键 id 查询
     * @date 2022/01/15
     **/
-    Article load(String id);
+    Article load(ArticleInfoReq param);
 
     /**
     * 查询 分页查询

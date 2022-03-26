@@ -168,10 +168,11 @@
     </delete>
     
     <delete id="delById">
-        update article set status=0 where article_id in
+        update article a set a.status=0 where a.article_id in
         <foreach collection="list" item="item" open="(" separator="," close=")">
             #{item.id}
         </foreach>
+        <include refid="FILTER_AUTHOR_ID"></include>
     </delete>
 
     <update id="update" parameterType="com.mugu.blog.article.common.model.po.Article">
@@ -196,9 +197,16 @@
 
     <select id="load" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List" />
-        FROM article
+        FROM article a
         WHERE article_id = #{id}
+        <include refid="FILTER_AUTHOR_ID"></include>
     </select>
+
+    <sql id="FILTER_AUTHOR_ID">
+        <if test="userId!=null and userId!=''">
+            and a.author_id=#{userId}
+        </if>
+    </sql>
 
     <select id="pageList" resultMap="BaseResultMap">
         SELECT
@@ -242,6 +250,7 @@
             <if test="isRecommend!=null">
                 and is_recommend=#{isRecommend}
             </if>
+            <include refid="FILTER_AUTHOR_ID"></include>
             and status!=0
         </where>
         order by id desc

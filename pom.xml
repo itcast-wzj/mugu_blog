@@ -46,6 +46,8 @@
         <lombok.version>1.18.4</lombok.version>
         <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
         <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
+        <blog-gray.version>1.0-SNAPSHOT</blog-gray.version>
+        <commons-io.version>2.2</commons-io.version>
     </properties>
 
     <dependencyManagement>
@@ -360,6 +362,13 @@
             </dependency>
 
             <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+
+
+            <dependency>
                 <groupId>com.mugu.blog</groupId>
                 <artifactId>blog-async-starter</artifactId>
                 <version>${blog.version}</version>
@@ -374,7 +383,7 @@
             <dependency>
                 <groupId>com.mugu.blog</groupId>
                 <artifactId>blog-gray-starter</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${blog-gray.version}</version>
             </dependency>
 
         </dependencies>

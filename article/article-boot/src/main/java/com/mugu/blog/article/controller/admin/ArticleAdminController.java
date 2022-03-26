@@ -8,6 +8,7 @@ import com.mugu.blog.article.common.model.req.ArticleInfoReq;
 import com.mugu.blog.article.common.model.req.ArticleListReq;
 import com.mugu.blog.article.common.model.vo.ArticleVo;
 import com.mugu.blog.article.service.ArticleService;
+import com.mugu.blog.common.annotation.AuthInjection;
 import com.mugu.blog.core.model.BaseParam;
 import com.mugu.blog.core.model.PageData;
 import com.mugu.blog.core.model.ResultMsg;
@@ -40,20 +41,20 @@ public class ArticleAdminController {
         return ResultMsg.resultSuccess();
     }
 
+    @AuthInjection
     @ApiOperation("获取文章列表")
     @PostMapping("/list")
     public ResultMsg<PageData<ArticleVo>> list(@RequestBody @Valid ArticleListReq req){
-        log.debug("获取文章列表：{}", JSON.toJSONString(req));
         return ResultMsg.resultSuccess(articleService.list(req));
     }
 
     @ApiOperation("搜索文章")
     @PostMapping("/search")
     public ResultMsg<PageData<ArticleVo>> search(@RequestBody @Valid BaseParam param) {
-        log.debug("Accept Parameter:{}",JSON.toJSONString(param));
         return ResultMsg.resultSuccess(articleService.search(param));
     }
 
+    @AuthInjection
     @ApiOperation("删除文章")
     @PostMapping("/del")
     public ResultMsg<Void> delById(@RequestBody @Valid List<ArticleDelReq> params){
@@ -61,10 +62,10 @@ public class ArticleAdminController {
         return ResultMsg.resultSuccess();
     }
 
+    @AuthInjection
     @ApiOperation("根据ID获取文章详情")
     @PostMapping("/getById")
     public ResultMsg<ArticleVo> getById(@RequestBody @Valid ArticleInfoReq req){
-        log.debug("根据ID获取文章详情，参数：{}", JSON.toJSONString(req));
         return ResultMsg.resultSuccess(articleService.getById(req));
     }
 }

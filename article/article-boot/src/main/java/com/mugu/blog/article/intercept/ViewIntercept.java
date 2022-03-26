@@ -28,6 +28,7 @@ public class ViewIntercept implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String uri = request.getRequestURI();
+
         //以文章的list接口作为参考标准
         if (StrUtil.equals(uri,contextPath+"/front/article/list")){
             //单日访问量

@@ -13,6 +13,16 @@ public class BaseParam {
 
     private String keyword;
 
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public Integer getPageNum() {
         return pageNum;
     }
