@@ -52,6 +52,10 @@
             <artifactId>spring-cloud-starter-oauth2</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-gray-starter</artifactId>
+        </dependency>
 
         <!-- gateway-->
         <dependency>

@@ -32,5 +32,6 @@
         <module>file-server-common</module>
         <module>blog-async-starter</module>
         <module>blog-monitor-client-starter</module>
+        <module>blog-gray-starter</module>
     </modules>
 </project>

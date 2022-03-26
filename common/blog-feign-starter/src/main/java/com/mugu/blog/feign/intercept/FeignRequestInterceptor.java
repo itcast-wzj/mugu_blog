@@ -1,8 +1,10 @@
 package com.mugu.blog.feign.intercept;
 
 import cn.hutool.core.util.StrUtil;
+import com.mugu.blog.core.constant.GrayConstant;
 import com.mugu.blog.core.model.oauth.OAuthConstant;
 import com.mugu.blog.feign.utils.RequestContextUtils;
+import com.mugu.blog.gray.utils.RibbonRequestContextHolder;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +40,15 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             while (enumeration.hasMoreElements()) {
                 String key = enumeration.nextElement();
                 String value = request.getHeader(key);
+                //需要传递的两个请求头==》 1.令牌信息  2. 灰度发布的请求头
                 if (StrUtil.equals(OAuthConstant.TOKEN_NAME,key)){
                     map.put(key, value);
-                    break;
+                }
+                
+                if (StrUtil.equals(GrayConstant.GRAY_HEADER,key)){
+                    //保存灰度发布的标记
+                    RibbonRequestContextHolder.put(key,value);
+                    map.put(key, value);
                 }
             }
         }

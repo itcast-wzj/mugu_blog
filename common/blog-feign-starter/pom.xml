@@ -24,6 +24,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!--灰度发布的starter-->
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-gray-starter</artifactId>
+        </dependency>
+
         <!-- 使用Apache HttpClient替换Feign原生httpclient-->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

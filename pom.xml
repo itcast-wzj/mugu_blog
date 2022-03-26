@@ -370,6 +370,13 @@
                 <artifactId>blog-monitor-client-starter</artifactId>
                 <version>${blog.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.mugu.blog</groupId>
+                <artifactId>blog-gray-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>

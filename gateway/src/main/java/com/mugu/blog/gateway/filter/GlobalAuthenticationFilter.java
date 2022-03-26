@@ -1,22 +1,24 @@
 package com.mugu.blog.gateway.filter;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.mugu.blog.core.constant.GrayConstant;
 import com.mugu.blog.core.model.ResultCode;
 import com.mugu.blog.core.model.ResultMsg;
 import com.mugu.blog.core.model.oauth.OAuthConstant;
 import com.mugu.blog.gateway.model.WhiteUrls;
+import com.mugu.blog.gray.utils.RibbonRequestContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.map.ser.std.ObjectArraySerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
-//import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -32,6 +34,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+//import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
  * @author 公众号：码猿技术专栏
@@ -63,6 +67,10 @@ public class GlobalAuthenticationFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String requestUrl = exchange.getRequest().getPath().value();
+
+        //灰度发布拦截
+        interceptGray(exchange);
+
         //1、白名单放行，比如授权服务、静态资源.....
         if (checkUrls(whiteUrls.getUrls(),requestUrl)){
             return chain.filter(exchange);
@@ -122,8 +130,24 @@ public class GlobalAuthenticationFilter implements GlobalFilter, Ordered {
             //解析token异常，直接返回token无效
             return invalidTokenMono(exchange);
         }
+    }
 
-
+    /**
+     * 灰度发布的拦截标记
+     */
+    private void interceptGray(ServerWebExchange exchange){
+        /**
+         * TODO 此处通过请求头进行灰度标记
+         * 特定的场景：比如根据登录的用户某种信息进行灰度标记，只需要对用户校验，然后加上灰度标记
+         */
+        //解析请求头，查看是否存在灰度发布的请求头信息，如果存在则将其放置在ThreadLocal中
+        HttpHeaders headers = exchange.getRequest().getHeaders();
+        if (headers.containsKey(GrayConstant.GRAY_HEADER)){
+            String gray = headers.getFirst(GrayConstant.GRAY_HEADER);
+            if (StrUtil.equals(gray,GrayConstant.GRAY_VALUE)){
+                RibbonRequestContextHolder.put(GrayConstant.GRAY_HEADER, GrayConstant.GRAY_VALUE);
+            }
+        }
     }
 
     @Override
