@@ -91,6 +91,29 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!--docker构建插件-->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.2.0</version>
+                <configuration>
+                    <!--镜像名称，名称:版本号-->
+                    <imageName>${project.build.finalName}:${project.parent.version}</imageName>
+                    <!--Dockerfile的位置-->
+                    <dockerDirectory>${project.basedir}/src/main/resources</dockerDirectory>
+                    <!--远程服务器的docker地址，需要配置-->
+                    <dockerHost>http://124.221.134.51:2375</dockerHost>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <!--jar包名字-->
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
