@@ -240,3 +240,9 @@ CREATE TABLE `undo_log`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'AT transaction mode undo table' ROW_FORMAT = Compact;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+create table oauth_code (
+  create_time timestamp default now(),
+  code VARCHAR(255),
+  authentication BLOB
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

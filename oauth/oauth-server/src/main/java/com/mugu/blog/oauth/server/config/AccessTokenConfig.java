@@ -29,9 +29,6 @@ public class AccessTokenConfig {
     @Autowired
     private TokenConstant tokenConstant;
 
-    @Autowired
-    private JwtTokenUserDetailsService jwtTokenUserDetailsService;
-
     /**
      * 令牌的存储策略
      */
