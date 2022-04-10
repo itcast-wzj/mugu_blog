@@ -5,8 +5,10 @@ import com.mugu.blog.oauth.server.model.SecurityUser;
 import com.mugu.blog.oauth.server.model.TokenConstant;
 import com.mugu.blog.oauth.server.service.impl.JwtTokenUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -28,6 +30,10 @@ public class AccessTokenConfig {
 
     @Autowired
     private TokenConstant tokenConstant;
+
+    @Autowired
+    @Qualifier(value = "jwtTokenUserDetailsService")
+    private UserDetailsService userDetailsService;
 
     /**
      * 令牌的存储策略
@@ -59,10 +65,17 @@ public class AccessTokenConfig {
             DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
             tokenConverter.setUserTokenConverter(userAuthenticationConverter);
          */
+        //创建默认的DefaultUserAuthenticationConverter
+        DefaultUserAuthenticationConverter userAuthenticationConverter = new DefaultUserAuthenticationConverter();
+        //注入UserDetailService
+        userAuthenticationConverter.setUserDetailsService(userDetailsService);
+        DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
+        tokenConverter.setUserTokenConverter(userAuthenticationConverter);
+        converter.setAccessTokenConverter(tokenConverter);
         //设置令牌转换器，将用户信息存储到令牌中
-        DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
-        accessTokenConverter.setUserTokenConverter(new JwtEnhanceUserAuthenticationConverter());
-        converter.setAccessTokenConverter(accessTokenConverter);
+//        DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
+//        accessTokenConverter.setUserTokenConverter(new JwtEnhanceUserAuthenticationConverter());
+
         return converter;
     }
 
