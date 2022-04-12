@@ -1,5 +1,15 @@
 FROM jdk1.8
+# 切换目录
+WORKDIR /usr/local
+# 创建skywalking的目录，需要挂载
+RUN mkdir /usr/local/skywalking
 ADD blog-oauth-server.jar blog-oauth-server.jar
+# 日志、skywalking的挂挂载点
+VOLUME ["/usr/local/logs","/usr/local/skywalking"]
+# 运行的端口
+ENV SERVER_PORT 9001
+# skywalking中的oap的地址
+ENV SKYWALKING_COLLECTOR_BACKEND_SERVICE 127.0.0.1:11800
 # 声明端口映射
-EXPOSE 9001
-ENTRYPOINT ["java","-Dfile.encoding=utf-8","-Xms200m","-Xmx300m","-jar","blog-oauth-server.jar"]
+EXPOSE ${SERVER_PORT}
+ENTRYPOINT ["java","-Dfile.encoding=utf-8","-Dserver.port=${SERVER_PORT}","-javaagent:/usr/local/skywalking/agent/skywalking-agent.jar","-Dskywalking.agent.service_name=blog-oauth-server","-Dskywalking.collector.backend_service=${SKYWALKING_COLLECTOR_BACKEND_SERVICE}","-Xms200m","-Xmx300m","-jar","blog-oauth-server.jar"]
