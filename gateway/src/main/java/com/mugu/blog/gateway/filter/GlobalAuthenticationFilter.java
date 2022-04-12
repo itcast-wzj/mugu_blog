@@ -9,14 +9,13 @@ import com.mugu.blog.core.model.ResultCode;
 import com.mugu.blog.core.model.ResultMsg;
 import com.mugu.blog.core.model.oauth.OAuthConstant;
 import com.mugu.blog.gateway.model.WhiteUrls;
-import com.mugu.blog.gray.utils.RibbonRequestContextHolder;
+import com.mugu.blog.gray.utils.GrayRequestContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
@@ -124,7 +123,12 @@ public class GlobalAuthenticationFilter implements GlobalFilter, Ordered {
             //将解析后的token加密放入请求头中，方便下游微服务解析获取用户信息
             String base64 = Base64.encode(jsonObject.toJSONString());
             //放入请求头中
-            ServerHttpRequest tokenRequest = exchange.getRequest().mutate().header(OAuthConstant.TOKEN_NAME, base64).build();
+            ServerHttpRequest tokenRequest = exchange.getRequest().mutate()
+                    //将令牌传递过去
+                    .header(OAuthConstant.TOKEN_NAME, base64)
+                    //将灰度标记传递过去
+                    .header(GrayConstant.GRAY_HEADER,GrayRequestContextHolder.getGrayTag().toString())
+                    .build();
             ServerWebExchange build = exchange.mutate().request(tokenRequest).build();
             return chain.filter(build);
         } catch (InvalidTokenException e) {
@@ -146,7 +150,8 @@ public class GlobalAuthenticationFilter implements GlobalFilter, Ordered {
         if (headers.containsKey(GrayConstant.GRAY_HEADER)){
             String gray = headers.getFirst(GrayConstant.GRAY_HEADER);
             if (StrUtil.equals(gray,GrayConstant.GRAY_VALUE)){
-                RibbonRequestContextHolder.put(GrayConstant.GRAY_HEADER, GrayConstant.GRAY_VALUE);
+                //设置灰度标记
+                GrayRequestContextHolder.setGrayTag(true);
             }
         }
     }

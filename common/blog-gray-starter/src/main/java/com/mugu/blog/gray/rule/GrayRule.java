@@ -1,10 +1,9 @@
 package com.mugu.blog.gray.rule;
 
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.cloud.nacos.ribbon.NacosServer;
 import com.google.common.base.Optional;
 import com.mugu.blog.core.constant.GrayConstant;
-import com.mugu.blog.gray.utils.RibbonRequestContextHolder;
+import com.mugu.blog.gray.utils.GrayRequestContextHolder;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ZoneAvoidanceRule;
@@ -14,7 +13,6 @@ import java.util.List;
 
 /**
  * 灰度发布的规则
- * 逻辑：从请求头中获取标记的
  */
 public class GrayRule extends ZoneAvoidanceRule {
 
@@ -25,7 +23,8 @@ public class GrayRule extends ZoneAvoidanceRule {
     @Override
     public Server choose(Object key) {
         try {
-            String grayTag = RibbonRequestContextHolder.getCurrentContext().get(GrayConstant.GRAY_HEADER);
+            //从ThreadLocal中获取灰度标记
+            boolean grayTag = GrayRequestContextHolder.getGrayTag().get();
             //获取所有可用服务
             List<Server> serverList = this.getLoadBalancer().getReachableServers();
             //灰度发布的服务
@@ -43,14 +42,14 @@ public class GrayRule extends ZoneAvoidanceRule {
                 }
             }
             //如果被标记为灰度发布，则调用灰度发布的服务
-            if(StrUtil.isNotBlank(grayTag)&&StrUtil.equals(GrayConstant.GRAY_VALUE,grayTag)) {
+            if(grayTag) {
                 return originChoose(grayServerList,key);
             } else {
                 return originChoose(normalServerList,key);
             }
         } finally {
             //清除灰度标记
-            RibbonRequestContextHolder.clearContext();
+            GrayRequestContextHolder.remove();
         }
     }
 

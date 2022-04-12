@@ -7,10 +7,10 @@ public class GrayConstant {
     /**
      * 请求头
      */
-    public final static String GRAY_HEADER="version";
+    public final static String GRAY_HEADER="gray";
 
     /**
-     * 灰度发布的才能够
+     * 灰度发布版本
      */
-    public final static String GRAY_VALUE="V2.0";
+    public final static String GRAY_VALUE="true";
 }

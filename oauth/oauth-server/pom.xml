@@ -77,6 +77,13 @@
             <artifactId>blog-monitor-client-starter</artifactId>
         </dependency>
 
+        <!--灰度规则-->
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-gray-starter</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <build>

@@ -49,6 +49,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!--灰度规则-->
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-gray-starter</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.mugu.blog</groupId>
             <artifactId>blog-skywalking-starter</artifactId>

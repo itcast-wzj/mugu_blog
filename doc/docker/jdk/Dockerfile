@@ -2,8 +2,8 @@
 FROM ubuntu
 # 指定镜像创建者信息
 MAINTAINER chenmou
-# 切换工作目录
 RUN mkdir /usr/local/jdk
+# 切换工作目录
 WORKDIR /usr/local/jdk
 # ADD 是对相对路径jar, 把jdk添加到容器中
 ADD jdk-8u221-linux-x64.tar.gz /usr/local/jdk

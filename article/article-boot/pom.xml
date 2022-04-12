@@ -56,6 +56,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!--灰度规则-->
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-gray-starter</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.mugu.blog</groupId>
             <artifactId>blog-elasticsearch-starter</artifactId>
@@ -130,7 +136,7 @@
                     <!--Dockerfile的位置-->
                     <dockerDirectory>${project.basedir}/src/main/resources</dockerDirectory>
                     <!--远程服务器的docker地址，需要配置-->
-                    <dockerHost>http://124.221.134.51:2375</dockerHost>
+                    <dockerHost>http://192.168.47.130:2375</dockerHost>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>

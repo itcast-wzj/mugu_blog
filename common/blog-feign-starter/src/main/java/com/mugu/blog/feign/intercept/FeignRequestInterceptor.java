@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.mugu.blog.core.constant.GrayConstant;
 import com.mugu.blog.core.model.oauth.OAuthConstant;
 import com.mugu.blog.feign.utils.RequestContextUtils;
-import com.mugu.blog.gray.utils.RibbonRequestContextHolder;
+import com.mugu.blog.gray.utils.GrayRequestContextHolder;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +44,11 @@ public class FeignRequestInterceptor implements RequestInterceptor {
                 if (StrUtil.equals(OAuthConstant.TOKEN_NAME,key)){
                     map.put(key, value);
                 }
-                
-                if (StrUtil.equals(GrayConstant.GRAY_HEADER,key)){
+
+                //将灰度标记的请求头透传给下个服务
+                if (StrUtil.equals(GrayConstant.GRAY_HEADER,key)&&Boolean.TRUE.toString().equals(value)){
                     //保存灰度发布的标记
-                    RibbonRequestContextHolder.put(key,value);
+                    GrayRequestContextHolder.setGrayTag(true);
                     map.put(key, value);
                 }
             }
