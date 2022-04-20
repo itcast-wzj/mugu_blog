@@ -24,7 +24,7 @@ CREATE TABLE `oauth_client_details`  (
 -- ----------------------------
 -- Records of oauth_client_details
 -- ----------------------------
-INSERT INTO `oauth_client_details` VALUES ('myjszl', 'res1', '$2a$10$HWuOIx8C.YvlhLwp2j5LYe/r8B04xtcFmuu6t1XEBrnr2JLGFcc0q', 'all', 'authorization_code,client_credentials,implicit,refresh_token,password', 'http://www.baidu.com', NULL, NULL, NULL, NULL, 'false');
+INSERT INTO `oauth_client_details` VALUES ('mugu', 'res1', '$2a$10$HWuOIx8C.YvlhLwp2j5LYe/r8B04xtcFmuu6t1XEBrnr2JLGFcc0q', 'all', 'authorization_code,client_credentials,implicit,refresh_token,password', 'http://www.baidu.com', NULL, NULL, NULL, NULL, 'false');
 
 -- ----------------------------
 -- Table structure for sys_meun
