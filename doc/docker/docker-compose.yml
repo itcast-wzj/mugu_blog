@@ -1,0 +1,72 @@
+version: '3.8'
+services:
+  article:
+    # 镜像名
+    image: blog-article:1.0-SNAPSHOT
+    # 容器名(以后的控制都通过这个)
+    container_name: blog-article
+    # 重启策略
+    restart: always
+    environment:
+      # 时区上海
+      SKYWALKING_COLLECTOR_BACKEND_SERVICE: 192.168.0.103:11800
+      # 映射端口
+    ports:
+      - 9004:9004
+    volumes:
+      # 数据挂载
+      - /usr/local/logs:/usr/local/logs
+      - /usr/local/skywalking:/usr/local/skywalking
+    networks:
+      - blog-article
+    ## 依赖关系，让mysql、redis先启动
+    depends_on:
+      - mysql
+      - redis
+  mysql:
+    # 镜像名
+    image: mysql:5.6
+    # 容器名(以后的控制都通过这个)
+    container_name: mysql
+    # 重启策略
+    restart: always
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+      # root 密码
+      MYSQL_ROOT_PASSWORD: Nov2014
+      # 初始化数据库(后续的初始化sql会在这个库执行)
+      MYSQL_DATABASE: mugu_blog_article
+      # 初始化用户
+      MYSQL_USER: blog
+      # 用户密码
+      MYSQL_PASSWORD: Nov2014
+      # 映射端口
+    ports:
+      - 3306:3306
+    volumes:
+      # 数据挂载
+      - /usr/local/docker-compose/mysql/data:/var/lib/mysql/
+      - /usr/local/docker-compose/mysql/conf:/etc/mysql/mysql.conf.d
+      - /usr/local/docker-compose/mysql/conf:/etc/mysql/conf.d
+    networks:
+      - blog-article
+  redis:
+    # 镜像名
+    image: redis:6.0.8
+    # 容器名(以后的控制都通过这个)
+    container_name: redis
+    # 重启策略
+    restart: always
+      # 映射端口
+    ports:
+      - 6379:6379
+    volumes:
+      # 数据挂载
+      - /usr/local/docker-compose/redis/conf:/etc/redis/redis.conf
+      - /usr/local/docker-compose/redis/data:/data
+    networks:
+      - blog-article
+    command: redis-server /etc/redis/redis.conf --requirepass live4dream
+networks:
+  blog-article:
