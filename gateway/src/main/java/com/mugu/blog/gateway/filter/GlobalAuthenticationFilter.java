@@ -126,7 +126,7 @@ public class GlobalAuthenticationFilter implements GlobalFilter, Ordered {
             ServerHttpRequest tokenRequest = exchange.getRequest().mutate()
                     //将令牌传递过去
                     .header(OAuthConstant.TOKEN_NAME, base64)
-                    //将灰度标记传递过去
+                    //将灰度标记传递过去  gray->true
                     .header(GrayConstant.GRAY_HEADER,GrayRequestContextHolder.getGrayTag().toString())
                     .build();
             ServerWebExchange build = exchange.mutate().request(tokenRequest).build();
