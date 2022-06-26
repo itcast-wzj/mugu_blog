@@ -116,6 +116,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authenticationManager(authenticationManager)
                 //令牌管理服务，无论哪种模式都需要
                 .tokenServices(tokenServices())
+//                .pathMapping("/oauth/confirm_access","/oauth/confirm_access")
+//                .pathMapping("/oauth/error","/oauth/error")
                 //只允许POST提交访问令牌，uri：/oauth/token
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
     }
