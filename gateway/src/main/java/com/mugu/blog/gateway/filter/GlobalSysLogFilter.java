@@ -38,10 +38,11 @@ public class GlobalSysLogFilter implements GlobalFilter, Ordered {
         //获取请求体
         requestInfo.setHeader(JSON.toJSONString(headers.toSingleValueMap()));
         if (MediaType.APPLICATION_JSON.isCompatibleWith(headers.getContentType())
-                ||MediaType.APPLICATION_FORM_URLENCODED.isCompatibleWith(headers.getContentType())
-                ||MediaType.MULTIPART_FORM_DATA.isCompatibleWith(headers.getContentType())){
+                ||MediaType.APPLICATION_FORM_URLENCODED.isCompatibleWith(headers.getContentType())){
             String body = resolveBody(exchange);
             requestInfo.setBody(body);
+        }else if (MediaType.MULTIPART_FORM_DATA.isCompatibleWith(headers.getContentType())){
+            requestInfo.setBody(null);
         }else {
             requestInfo.setBody(JSON.toJSONString(request.getQueryParams().toSingleValueMap()));
         }

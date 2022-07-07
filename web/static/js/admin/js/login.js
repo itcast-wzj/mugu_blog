@@ -28,14 +28,19 @@ $('#login').click(function () {
         data:{ username: username, password: password,client_id:"mugu",client_secret:"123",grant_type:"password" },
         url : sessionStorage.getItem("requestUrl")+"/blog-auth-server/oauth/token",
         async: false,
-        success : function (data) {
-            //跳转到后台首页
-            sessionStorage.setItem("access_token",data.access_token);
-            sessionStorage.setItem("refresh_token",data.refresh_token);
-            sessionStorage.setItem("nickName",data.nick_name);
-            sessionStorage.setItem("avatar",data.avatar);
-            //表单跳转
-            $("#form1").attr("action","./index.html");
+        success : function (res) {
+            //返回成功
+            if (res.code==200){
+                //跳转到后台首页
+                sessionStorage.setItem("access_token",res.data.access_token);
+                sessionStorage.setItem("refresh_token",res.data.refresh_token);
+                sessionStorage.setItem("nickName",res.data.nick_name);
+                sessionStorage.setItem("avatar",res.data.avatar);
+                //表单跳转
+                $("#form1").attr("action","./index.html");
+            }else{
+                $("#fail").attr("hidden",false);
+            }
         },
         error: function(result) {
             $("#fail").attr("hidden",false);
