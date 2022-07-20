@@ -11,3 +11,4 @@ target
 *.log
 
 
+/oauth/oauth-server/src/main/resources/application-dev.yml

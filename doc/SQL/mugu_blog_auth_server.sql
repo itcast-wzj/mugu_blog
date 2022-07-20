@@ -246,3 +246,18 @@ create table oauth_code (
   code VARCHAR(255),
   authentication BLOB
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 社交登录所需的表
+CREATE TABLE `sys_userconnection` (
+                                      `userId` varchar(255) NOT NULL COMMENT '业务系统的唯一userid',
+                                      `providerId` varchar(255) NOT NULL COMMENT '社交系统的id',
+                                      `providerUserId` varchar(255) DEFAULT NULL COMMENT '社交系统的唯一userid',
+                                      `rank` int(11) NOT NULL,
+                                      `displayName` varchar(255) DEFAULT NULL,
+                                      `profileUrl` varchar(512) DEFAULT NULL,
+                                      `imageUrl` varchar(512) DEFAULT NULL,
+                                      `accessToken` varchar(512) DEFAULT NULL,
+                                      `secret` varchar(512) DEFAULT NULL,
+                                      `refreshToken` varchar(512) DEFAULT NULL,
+                                      `expireTime` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

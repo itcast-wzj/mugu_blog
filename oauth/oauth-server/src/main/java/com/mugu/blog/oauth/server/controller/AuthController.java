@@ -5,6 +5,8 @@ import com.mugu.blog.core.model.ResultMsg;
 import com.mugu.blog.core.model.oauth.OAuthConstant;
 import com.mugu.blog.core.utils.OauthUtils;
 import com.mugu.blog.oauth.server.exception.OAuthServerWebResponseExceptionTranslator;
+import com.mugu.blog.user.api.feign.UserFeign;
+import com.mugu.blog.user.common.req.SysBindReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
@@ -23,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +49,12 @@ public class AuthController implements InitializingBean {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private UserFeign userFeign;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * 重写/oauth/token这个默认接口，返回的数据格式统一
@@ -89,6 +99,17 @@ public class AuthController implements InitializingBean {
     public String error(Model model){
         return "oauth-error";
     }
+
+
+
+    @ApiOperation(value = "社交登录绑定/注册用户")
+    @PostMapping("/bind")
+    @ResponseBody
+    public ResultMsg<Void> bind(@Valid SysBindReq bindReq){
+        bindReq.setPassword(passwordEncoder.encode(bindReq.getPassword()));
+        return userFeign.bind(bindReq);
+    }
+
 
     /********************************************下面的@ExceptionHandler对/oauth/token这个接口的异常进行捕获**********************************************************************/
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)

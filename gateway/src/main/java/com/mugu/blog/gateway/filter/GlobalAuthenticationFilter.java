@@ -34,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 //import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -100,11 +101,11 @@ public class GlobalAuthenticationFilter implements GlobalFilter, Ordered {
             List<String> authorities = (List<String>) additionalInformation.get("authorities");
             //从additionalInformation取出userId
             String userId = additionalInformation.get(OAuthConstant.USER_ID).toString();
-            Integer gender = (Integer) additionalInformation.get(OAuthConstant.GENDER);
-            String nickName = additionalInformation.get(OAuthConstant.NICK_NAME).toString();
-            String avatar = additionalInformation.get(OAuthConstant.AVATAR).toString();
-            String mobile = additionalInformation.get(OAuthConstant.MOBILE).toString();
-            String email = additionalInformation.get(OAuthConstant.EMAIL).toString();
+            Integer gender = (Integer)additionalInformation.get(OAuthConstant.GENDER);
+            String nickName = (String) additionalInformation.get(OAuthConstant.NICK_NAME);
+            String avatar = (String) additionalInformation.get(OAuthConstant.AVATAR);
+            String mobile = (String) additionalInformation.get(OAuthConstant.MOBILE);
+            String email = (String) additionalInformation.get(OAuthConstant.EMAIL);
 
             JSONObject jsonObject=new JSONObject();
             jsonObject.put(OAuthConstant.PRINCIPAL_NAME, user_name);

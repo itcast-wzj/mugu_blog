@@ -37,7 +37,7 @@ $('#login').click(function () {
                 sessionStorage.setItem("nickName",res.data.nick_name);
                 sessionStorage.setItem("avatar",res.data.avatar);
                 //表单跳转
-                $("#form1").attr("action","./index.html");
+                window.location.href="./index.html";
             }else{
                 $("#fail").attr("hidden",false);
             }

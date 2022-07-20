@@ -13,6 +13,7 @@
         <module>oauth-server</module>
         <module>user-boot</module>
         <module>user-api</module>
+        <module>oauth-social-starter</module>
     </modules>
     <artifactId>oauth</artifactId>
     <dependencies>

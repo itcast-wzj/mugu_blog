@@ -17,6 +17,9 @@ public class SecurityUser implements UserDetails {
 
     private String userId;
 
+    //三方供应方的唯一标识
+    private String providerId;
+
     private String nickname;
 
     private Integer gender;

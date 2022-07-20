@@ -89,6 +89,11 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>oauth-social-starter</artifactId>
+        </dependency>
+
 
     </dependencies>
 

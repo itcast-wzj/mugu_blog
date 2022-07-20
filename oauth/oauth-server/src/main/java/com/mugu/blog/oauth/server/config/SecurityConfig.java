@@ -1,5 +1,6 @@
 package com.mugu.blog.oauth.server.config;
 
+import com.mugu.blog.oauth.server.social.config.SocialSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier(value = "jwtTokenUserDetailsService")
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SocialSecurityConfig socialSecurityConfig;
+
     /**
      * 加密算法
      */
@@ -36,10 +40,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //todo 允许表单登录
-        http.authorizeRequests()
+        http
+                .apply(socialSecurityConfig)
+                .and()
+                .authorizeRequests()
                 //注销的接口需要放行
                 ///actuator/**、/instances/** 这两个是spring boot admin需要的接口，需要放行
-                .antMatchers("/oauth/logout","/actuator/**","/instances/**","/oauth/login","/form/login").permitAll()
+                .antMatchers("/oauth/logout","/actuator/**",
+                        "/instances/**","/oauth/login","/oauth/bind",
+                        "/form/login","/social/**").permitAll()
                 .anyRequest().authenticated();
         http
                 .formLogin()

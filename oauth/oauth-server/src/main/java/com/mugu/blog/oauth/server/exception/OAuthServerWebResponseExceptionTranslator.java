@@ -20,7 +20,7 @@ public class OAuthServerWebResponseExceptionTranslator implements WebResponseExc
     @Override
     public ResponseEntity<ResultMsg> translate(Exception e){
         ResultMsg resultMsg = doTranslateHandler(e);
-        return new ResponseEntity<>(resultMsg, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(resultMsg, HttpStatus.OK);
     }
 
     /**

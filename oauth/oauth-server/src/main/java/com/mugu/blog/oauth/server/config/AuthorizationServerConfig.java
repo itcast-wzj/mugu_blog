@@ -2,6 +2,7 @@ package com.mugu.blog.oauth.server.config;
 import com.mugu.blog.oauth.server.exception.OAuthServerAuthenticationEntryPoint;
 import com.mugu.blog.oauth.server.exception.OAuthServerClientCredentialsTokenEndpointFilter;
 import com.mugu.blog.oauth.server.exception.OAuthServerWebResponseExceptionTranslator;
+import com.mugu.blog.oauth.server.social.SocialTokenGranter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,16 +14,23 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
+import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author  公众号：码猿技术专栏
@@ -107,6 +115,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     @SuppressWarnings("ALL")
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+        List<TokenGranter> tokenGranters=new ArrayList<>(Collections.singletonList(endpoints.getTokenGranter()));
+        tokenGranters.add(new SocialTokenGranter(authenticationManager,tokenServices(),clientDetailsService,new DefaultOAuth2RequestFactory(clientDetailsService)));
         endpoints
                 //设置异常WebResponseExceptionTranslator，用于处理用户名，密码错误、授权类型不正确的异常
                 .exceptionTranslator(new OAuthServerWebResponseExceptionTranslator())
@@ -121,6 +131,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 //异常页面的url替换
 //                .pathMapping("/oauth/error","自定义的url")
                 //只允许POST提交访问令牌，uri：/oauth/token
+                .tokenGranter(new CompositeTokenGranter(tokenGranters))
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
     }
 

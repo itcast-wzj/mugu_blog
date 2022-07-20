@@ -386,6 +386,18 @@
                 <version>${blog-gray.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.mugu.blog</groupId>
+                <artifactId>oauth-social-starter</artifactId>
+                <version>${blog.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.6</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>

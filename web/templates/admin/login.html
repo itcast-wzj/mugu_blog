@@ -22,7 +22,7 @@
              管理后台登录
            </div>
          </h2>
-         <form class="ui large form" method="post" id="form1">
+         <div class="ui large form" id="form1">
            <div class="ui  segment">
              <div class="field">
                <div class="ui left icon input">
@@ -37,12 +37,12 @@
                </div>
              </div>
              <button class="ui fluid large teal submit button" id="login">登   录</button>
+             <img src="../../static/images/github.jpg" onclick="social_login('github')"/>
+             <img src="../../static/images/qqlogin.png" onclick="social_login('qq')">
            </div>
-
            <div class="ui error mini message"></div>
            <div class="ui mini negative message" hidden="true" id="fail" >用户名和密码错误</div>
-         </form>
-
+         </div>
        </div>
      </div>
    </div>
@@ -52,6 +52,126 @@
 <script src="https://unpkg.zhimg.com/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-30-M/semantic-ui/2.2.4/semantic.js"></script>
 <script src="../../static/js/admin/js/login.js"></script>
+
+<script>
+
+  //向服务端申请完整的授权url
+  function getAuthorizeUrl(providerId) {
+    var authorizeUrl=null;
+    $.ajax({
+      type : "POST",
+      url : sessionStorage.getItem("requestUrl")+"/blog-auth-server/social/"+providerId+"/getAuthorizeUrl",
+      async: false,
+      success : function (res) {
+        //返回成功
+        if (res.code==200){
+          authorizeUrl=res.data.authorizeUrl;
+          //将服务端返回的随机值放入缓存中
+          localStorage.setItem("state",res.data.state);
+        }else{
+          alert("授权失败，请重试！");
+        }
+      },
+      error: function(result) {
+        alert("授权异常，请重试！");
+      }
+    });
+    return authorizeUrl;
+  }
+
+  //社交登录的小窗口
+  function social_login(providerId) {
+    //获取url
+    var authorizeUrl=getAuthorizeUrl(providerId);
+    if (authorizeUrl==null)
+      return;
+    // 弹出 500 * 500 的窗口
+    var winobj=window.open(
+            authorizeUrl,
+            "newwindow",
+            "height=500, width=500, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no"//style不重要
+    );
+
+    //监听小窗口关闭
+    let loop = setInterval(function () {
+      if (winobj.closed){
+        clearInterval(loop);
+        var socialToken = localStorage.getItem("social_token");
+        if (socialToken==null)
+          return;
+        var providerUserId=getUserInfo(socialToken,providerId);
+        if (providerUserId==null)
+          return;
+        var state=sessionStorage.getItem("state");
+        if (state==null)
+          return;
+        getAccessToken(providerId,providerUserId,state);
+      }
+    },500);
+  };
+
+
+  function getUserInfo(accessToken,providerId) {
+    var providerUserId=null;
+    $.ajax({
+      type : "POST",
+      data:{ "accessToken": accessToken},
+      url : sessionStorage.getItem("requestUrl")+"/blog-auth-server/social/"+providerId+"/getUserInfo",
+      async: false,
+      success : function (res) {
+        //返回成功
+        if (res.code==200){
+          providerUserId=res.data.providerUserId;
+          sessionStorage.setItem("providerId",res.data.providerId);
+          sessionStorage.setItem("providerUserId",res.data.providerUserId);
+          sessionStorage.setItem("displayName",res.data.displayName);
+          sessionStorage.setItem("imageUrl",res.data.imageUrl);
+          sessionStorage.setItem("state",res.data.state);
+        }else{
+          alert("获取用户信息失败"+res.code);
+        }
+      },
+      error: function(result) {
+        alert("获取用户信息成异常");
+      }
+    });
+    return providerUserId;
+  }
+
+  //拿着服务商的唯一id换本方系统的token
+  function getAccessToken(providerId,providerUserId,state) {
+    $.ajax({
+      type : "POST",
+      data:{ "providerId": providerId, "providerUserId": providerUserId,"state":state,"client_id":"mugu","client_secret":"123","grant_type":"social" },
+      url : sessionStorage.getItem("requestUrl")+"/blog-auth-server/oauth/token",
+      async: false,
+      success : function (res) {
+        //返回成功
+        if (res.code==200){
+          //跳转到后台首页
+          sessionStorage.setItem("access_token",res.data.access_token);
+          sessionStorage.setItem("refresh_token",res.data.refresh_token);
+          sessionStorage.setItem("nickName",res.data.nick_name);
+          sessionStorage.setItem("avatar",res.data.avatar);
+          //跳转到首页
+          window.location.href="./index.html";
+        }
+        //code=1002 该用户未注册绑定
+        else if(res.code==1002){
+          //跳转到注册绑定页面
+          window.location.href="./bind.html";
+        }
+        else{
+          $("#fail").attr("hidden",false);
+        }
+      },
+      error: function(result) {
+        $("#fail").attr("hidden",false);
+      }
+    });
+  }
+
+</script>
 
 </body>
 </html>
