@@ -135,11 +135,10 @@ function listArticles(pageNum,pageSize){
 listArticles(1,10);
 
 function delById(id) {
-    var params=[
-        {
+    var params={
             "id": id
         }
-    ]
+
     //请求分类接口，进行处理
     $.ajax({
         type: "POST",

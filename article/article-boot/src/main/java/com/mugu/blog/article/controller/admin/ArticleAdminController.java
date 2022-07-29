@@ -57,7 +57,7 @@ public class ArticleAdminController {
     @AuthInjection
     @ApiOperation("删除文章")
     @PostMapping("/del")
-    public ResultMsg<Void> delById(@RequestBody @Valid List<ArticleDelReq> params){
+    public ResultMsg<Void> delById(@RequestBody @Valid ArticleDelReq params){
         articleService.delById(params);
         return ResultMsg.resultSuccess();
     }

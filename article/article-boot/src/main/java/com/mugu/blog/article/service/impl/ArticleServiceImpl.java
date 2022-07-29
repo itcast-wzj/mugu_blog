@@ -198,17 +198,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Transactional
     @Override
-    public int delById(List<ArticleDelReq> params) {
+    public int delById(ArticleDelReq params) {
         int i = articleMapper.delById(params);
         AssertUtils.assertTrue(i>0);
-
-        for (ArticleDelReq param : params) {
-            //发送消息删除es中的文章
-            ArticleMq articleMq = new ArticleMq();
-            articleMq.setArticleId(param.getId());
-            articleMq.setFlag(3);
-            sendMsgService.sendMsg(RabbitMqConfig.EXCHANGE_NAME,RabbitMqConfig.ROUTING_KEY, JSON.toJSONString(articleMq));
-        }
+        //发送消息删除es中的文章
+        ArticleMq articleMq = new ArticleMq();
+        articleMq.setArticleId(params.getId());
+        articleMq.setFlag(3);
+        sendMsgService.sendMsg(RabbitMqConfig.EXCHANGE_NAME,RabbitMqConfig.ROUTING_KEY, JSON.toJSONString(articleMq));
         return i;
     }
 

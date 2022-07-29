@@ -54,7 +54,7 @@ public interface ArticleMapper {
     **/
     int pageListCount(int offset,int pagesize);
 
-    int delById(@Param("list") List<ArticleDelReq> params);
+    int delById(ArticleDelReq params);
 
     int insertArticleIp(ArticleIp articleIp);
 

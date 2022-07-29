@@ -15,7 +15,7 @@ public interface ArticleService {
 
     PageData<ArticleVo> list(ArticleListReq req);
 
-    int delById(List<ArticleDelReq> params);
+    int delById(ArticleDelReq params);
 
     ArticleVo getById(ArticleInfoReq param);
 

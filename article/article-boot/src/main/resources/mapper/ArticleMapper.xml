@@ -168,10 +168,7 @@
     </delete>
     
     <delete id="delById">
-        update article a set a.status=0 where a.article_id in
-        <foreach collection="list" item="item" open="(" separator="," close=")">
-            #{item.id}
-        </foreach>
+        update article a set a.status=0 where a.article_id=#{id}
         <include refid="FILTER_AUTHOR_ID"></include>
     </delete>
 
