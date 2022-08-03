@@ -1,6 +1,5 @@
 package com.mugu.blog.social.service;
 
-import com.mugu.blog.core.utils.SnowflakeUtil;
 import com.mugu.blog.social.model.SecuritySocialProperties;
 import com.mugu.blog.social.model.UserConnection;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -70,7 +69,7 @@ public abstract class AbstractSocialApI implements SocialApI{
      * @param accessToken 服务提供商的令牌->com.mugu.blog.social.service.AbstractSocialApI#getAccessToken()
      * @return 服务提供商返回个人用户信息
      */
-    public abstract UserConnection doGetUserInfo(String accessToken);
+    protected abstract UserConnection doGetUserInfo(String accessToken);
 
     /**
      * 发出请求令牌

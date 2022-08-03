@@ -74,7 +74,7 @@ public class SocialAuthController {
      */
     @SneakyThrows
     @PostMapping("/{providerId}/accessToken")
-    public ResultMsg<String> callback(String code, String state,@PathVariable String providerId){
+    public ResultMsg<String> getAccessToken(String code, String state,@PathVariable String providerId){
         //校验state
         String key=MessageFormat.format("mugu:social:state:{0}",state);
         String value = stringRedisTemplate.opsForValue().get(key);

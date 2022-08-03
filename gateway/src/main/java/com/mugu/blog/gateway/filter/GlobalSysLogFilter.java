@@ -61,7 +61,7 @@ public class GlobalSysLogFilter implements GlobalFilter, Ordered {
     }
 
     private void writeLog(RequestInfo requestInfo){
-        log.info("收到一条请求，请求参数：{}",JSON.toJSONString(requestInfo));
+//        log.info("收到一条请求，请求参数：{}",JSON.toJSONString(requestInfo));
         //TODO 日志持久化
     }
 

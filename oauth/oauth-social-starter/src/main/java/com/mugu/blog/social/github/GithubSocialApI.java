@@ -2,7 +2,6 @@ package com.mugu.blog.social.github;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mugu.blog.core.model.ResultMsg;
 import com.mugu.blog.social.model.SecuritySocialProperties;
 import com.mugu.blog.social.model.UserConnection;
 import com.mugu.blog.social.service.AbstractSocialApI;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
