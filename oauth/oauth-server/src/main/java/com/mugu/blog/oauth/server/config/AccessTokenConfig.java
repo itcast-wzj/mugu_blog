@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -18,7 +19,9 @@ import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticat
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
+import java.security.KeyPair;
 import java.util.LinkedHashMap;
 
 /**
@@ -52,8 +55,24 @@ public class AccessTokenConfig {
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter(){
         JwtAccessTokenConverter converter = new JwtAccessTokenEnhancer();
-        // 设置秘钥
+        /*****************************配置对称加密秘钥***********************************/
+        // 设置秘钥 -- 对称加密配置
         converter.setSigningKey(tokenConstant.getSignKey());
+        /*****************************配置对称加密秘钥***********************************/
+
+        /*****************************配置非对称加密证书信息***********************************/
+        //配置证书信息
+//        KeyPair keyPair = new KeyStoreKeyFactory(
+//                //证书路径
+//                new ClassPathResource("mugu_blog.jks"),
+//                //证书秘钥
+//                "mugu_blog".toCharArray())
+//                //证书别名
+//                .getKeyPair("mugu_blog",
+//                        //证书密码
+//                        "mugu_blog".toCharArray());
+//        converter.setKeyPair(keyPair);
+        /*****************************配置非对称加密证书信息***********************************/
 
         /**
          * 解决刷新令牌，无法增强的方案一：设置自定义的UserDetailService

@@ -6,6 +6,8 @@ import com.mugu.blog.gateway.model.TokenConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -13,7 +15,11 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
+import java.util.stream.Collectors;
 
 /**
  * 令牌的配置
@@ -41,9 +47,30 @@ public class AccessTokenConfig {
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter(){
         JwtAccessTokenConverter converter = new JwtAccessTokenEnhancer();
-        // 设置秘钥
+        /**********************配置对称加密的秘钥********************************/
+        // 设置秘钥，对称加密方式
         converter.setSigningKey(tokenConstant.getSignKey());
+        /**********************配置对称加密的秘钥********************************/
+
+
+        /**********************配置非对称加密的公钥********************************/
+//        converter.setVerifierKey(getPubKey());
+        /**********************配置非对称加密的公钥********************************/
         return converter;
+    }
+
+    /**
+     * 非对称加密公钥Key
+     */
+    private String getPubKey() {
+        Resource resource = new ClassPathResource("public.key");
+        try {
+            InputStreamReader inputStreamReader = new InputStreamReader(resource.getInputStream());
+            BufferedReader br = new BufferedReader(inputStreamReader);
+            return br.lines().collect(Collectors.joining("\n"));
+        } catch (IOException ioe) {
+            return null;
+        }
     }
 
     /**
