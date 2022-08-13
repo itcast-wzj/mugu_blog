@@ -28,7 +28,9 @@ $('#login').click(function () {
         success : function (res) {
             //返回成功
             if (res.code==200){
-                getAccessToken(sessionStorage.getItem("providerId"),sessionStorage.getItem("providerUserId"));
+                setTimeout( function(){
+                    getAccessToken(sessionStorage.getItem("providerId"),sessionStorage.getItem("providerUserId"));
+                }, 3000 );
             }else{
                 alert("注册/绑定异常，请重试！");
                 $("#fail").attr("hidden",false);
@@ -45,7 +47,7 @@ $('#login').click(function () {
 function getAccessToken(providerId,providerUserId) {
     $.ajax({
         type : "POST",
-        data:{ "providerId": providerId, "providerUserId": providerUserId,"client_id":"mugu","client_secret":"123","grant_type":"social" },
+        data:{ "providerId": providerId, "providerUserId": providerUserId,"state":sessionStorage.getItem("state"),"client_id":"mugu","client_secret":"123","grant_type":"social" },
         url : sessionStorage.getItem("requestUrl")+"/blog-auth-server/oauth/token",
         async: false,
         success : function (res) {
